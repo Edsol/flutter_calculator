@@ -1,56 +1,64 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/numbergrid.dart';
 
-import 'package:flutter/material.dart';
+// class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
+  @override
+  State createState() => new HomePageState();
+}
 
-class MyHomePage extends StatelessWidget {
-  final String title;
-  String bodyText = "Page";
+class HomePageState extends State<MyHomePage> {
 
-  MyHomePage({Key key, this.title}) : super(key: key);
+  Widget _createButton(String number, Function() f) {
+    return MaterialButton(
+      height: 100.0,
+      child: Text(number,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0)),
+      textColor: Colors.black,
+      color: Colors.grey[100],
+      onPressed: f,
+    );
+  }
+
+  Column _createColumn(List<String> values){
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: values.map((value) => _createButton(value,_clear)).toList()
+    );
+  }
+
+  _clear() {}
+  _zero() {}
+  _disp() {}
+  _div() {}
 
   @override
-    @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: new AppBar(
-        title: new Text('Calcolatrice'),
-      ),
-      body: new Container(
-        child: new ListView(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Text("1"),
-              Text('2'),
-              Text("3")
-            ]
-            )
-          ],
+        appBar: new AppBar(
+          title: new Text('Calcolatrice'),
         ),
-      )
-      // Row(
-      //   crossAxisAlignment: CrossAxisAlignment.center,
-      //   children: [
-      //     Expanded(
-      //       child: Text("1"),
-      //     ),
-      //     Expanded(
-      //       child: Text("2"),
-      //     ),
-      //     Expanded(
-      //       child: Text("3"),
-      //     ),
-      //   ],
-      // ),
-      // Row(
-      //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      //   children: [
-      //     Text("1"),
-      //     Text('2'),
-      //     Text("3")
-      //   ],
-      // ),
-    );
+        body: new Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              new Container(
+                constraints: BoxConstraints.expand(
+                  height: Theme.of(context).textTheme.display1.fontSize * 1.1 +
+                      100.0,
+                ),
+                alignment: Alignment.bottomRight,
+                color: Colors.white,
+                child: Text(
+                  "1234",
+                  style: TextStyle(fontSize: 50, color: Colors.black),
+                  textAlign: TextAlign.right,
+                ),
+              ),
+              _createColumn(["/","X","-","+","="]),
+              // _createColumn(["/","X","-","+","="])
+            ],
+          ),
+        ));
   }
 }

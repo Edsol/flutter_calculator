@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/numbergrid.dart';
+// import 'package:myapp/makeGrid.dart';
 
 // class MyHomePage extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
@@ -8,9 +8,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<MyHomePage> {
-  String numbers_value = "22";
+  String numberValue = "22";
 
-  String first_number = "0";
+  String firstVumber = "0";
 
   Column _createColumn(List<Map> values) {
     return Column(
@@ -21,7 +21,7 @@ class HomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _createButton(String number, Function() f,String arg) {
+  Widget _createButton(String number, Function(String) func,String argument) {
     return MaterialButton(
       height: 100.0,
       minWidth: 102.5,
@@ -29,24 +29,37 @@ class HomePageState extends State<MyHomePage> {
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0)),
       textColor: Colors.black,
       color: Colors.grey[100],
-      onPressed: f,
+      onPressed: () => func(argument),
     );
   }
 
-  _addNumber(String new_char) {
+  // _addNumber(String new_char) {
+  //   setState(() {
+  //     numbers_value += new_char;
+  //   });
+  // }
+  _add(String newValue){
+    if(numberValue != '0'){
+      newValue = numberValue + newValue;
+    }
     setState(() {
-      numbers_value += new_char;
+      numberValue = newValue;
     });
   }
 
-  _clear(String argument) {
+  _clear(String newValue) {
     setState(() {
-      numbers_value = '0';
+      numberValue = newValue;
     });
   }
-  _zero() {}
-  _disp() {}
-  _div() {}
+  _backspace(String val){
+    setState(() {
+      numberValue = numberValue.substring(0,numberValue.length-1);
+    });
+  }
+  // _zero() {}
+  // _disp() {}
+  // _div() {}
 
 
   @override
@@ -67,7 +80,7 @@ class HomePageState extends State<MyHomePage> {
                 alignment: Alignment.bottomRight,
                 color: Colors.white,
                 child: Text(
-                  numbers_value,
+                  numberValue,
                   style: TextStyle(fontSize: 50, color: Colors.black),
                   textAlign: TextAlign.right,
                 ),
@@ -76,10 +89,34 @@ class HomePageState extends State<MyHomePage> {
                 // mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  _createColumn([{'view':'AC','function':_clear,'argument':'0'}]),
-                  // _createColumn(["AC", "7", "4", "1", " "]),
-                  // _createColumn(['C', "8", "5", "2", "0"]),
-                  // _createColumn(["%", "9", "6", "3", "."]),
+                  _createColumn([
+                    {'view':'AC','function':_clear,'argument':'0'},
+                    {'view':'7','function':_add,'argument':'7'},
+                    {'view':'4','function':_add,'argument':'4'},
+                    {'view':'1','function':_add,'argument':'1'},
+                    {'view':' ','function':_add,'argument':''},
+                  ]),
+                  _createColumn([
+                    {'view':'C','function':_backspace,'argument':''},
+                    {'view':'8','function':_add,'argument':'8'},
+                    {'view':'5','function':_add,'argument':'5'},
+                    {'view':'2','function':_add,'argument':'2'},
+                    {'view':'0','function':_add,'argument':'0'},
+                  ]),
+                  _createColumn([
+                    {'view':'%','function':_backspace,'argument':''},
+                    {'view':'9','function':_add,'argument':'9'},
+                    {'view':'6','function':_add,'argument':'6'},
+                    {'view':'3','function':_add,'argument':'3'},
+                    {'view':'.','function':_add,'argument':'.'},
+                  ]),
+                  _createColumn([
+                    {'view':'/','function':_backspace,'argument':'/'},
+                    {'view':'X','function':_add,'argument':'X'},
+                    {'view':'-','function':_add,'argument':'-'},
+                    {'view':'+','function':_add,'argument':'+'},
+                    {'view':'=','function':_add,'argument':'='},
+                  ]),
                   // _createColumn(["/", "X", "-", "+", "="]),
                 ],
               )

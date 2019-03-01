@@ -8,23 +8,20 @@ class MyHomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<MyHomePage> {
-
-  String numbers_value ="0";
+  String numbers_value = "22";
 
   String first_number = "0";
 
-
-  Column _createColumn(List<String> values) {
+  Column _createColumn(List<Map> values) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: 
-      values.map(
-        (value) => _createButton(value,_clear)
+      children: values.map(
+        (element) => _createButton(element['view'],element['function'],element['argument'])
       ).toList()
     );
   }
 
-  Widget _createButton(String number, Function() f) {
+  Widget _createButton(String number, Function() f,String arg) {
     return MaterialButton(
       height: 100.0,
       minWidth: 102.5,
@@ -36,16 +33,21 @@ class HomePageState extends State<MyHomePage> {
     );
   }
 
-  _addNumber(String new_char){
+  _addNumber(String new_char) {
     setState(() {
       numbers_value += new_char;
     });
   }
 
-  _clear() {}
+  _clear(String argument) {
+    setState(() {
+      numbers_value = '0';
+    });
+  }
   _zero() {}
   _disp() {}
   _div() {}
+
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +61,8 @@ class HomePageState extends State<MyHomePage> {
             children: <Widget>[
               new Container(
                 constraints: BoxConstraints.expand(
-                  height: Theme.of(context).textTheme.display1.fontSize * 1.1 + 60.0,
+                  height: Theme.of(context).textTheme.display1.fontSize * 1.1 +
+                      60.0,
                 ),
                 alignment: Alignment.bottomRight,
                 color: Colors.white,
@@ -73,10 +76,11 @@ class HomePageState extends State<MyHomePage> {
                 // mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  _createColumn(["AC", "7", "4", "1", " "]),
-                  _createColumn(['C', "8", "5", "2", "0"]),
-                  _createColumn(["%", "9", "6", "3", "."]),
-                  _createColumn(["/", "X", "-", "+", "="]),
+                  _createColumn([{'view':'AC','function':_clear,'argument':'0'}]),
+                  // _createColumn(["AC", "7", "4", "1", " "]),
+                  // _createColumn(['C', "8", "5", "2", "0"]),
+                  // _createColumn(["%", "9", "6", "3", "."]),
+                  // _createColumn(["/", "X", "-", "+", "="]),
                 ],
               )
             ],

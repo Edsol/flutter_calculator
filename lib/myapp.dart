@@ -8,9 +8,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<MyHomePage> {
-  String numberValue = "22";
+  String numberValue = "0";
 
-  String firstVumber = "0";
+  String firstNumber = '';
+  String secondNumber = '';
+  String signValue = '';
 
   Column _createColumn(List<Map> values) {
     return Column(
@@ -33,34 +35,77 @@ class HomePageState extends State<MyHomePage> {
     );
   }
 
-  // _addNumber(String new_char) {
-  //   setState(() {
-  //     numbers_value += new_char;
-  //   });
-  // }
   _add(String newValue){
-    if(numberValue != '0'){
+    if(numberValue != '0' || newValue == ','){
       newValue = numberValue + newValue;
     }
-    setState(() {
-      numberValue = newValue;
-    });
+    _setNumberValue(newValue);
   }
 
   _clear(String newValue) {
+    firstNumber = '';
+    secondNumber = '';
+    signValue = '';
+    _setNumberValue('');
+  }
+  _backspace(String val){
+    _setNumberValue(numberValue.substring(0,numberValue.length-1));
+  }
+  _setNumberValue(String newValue){
     setState(() {
       numberValue = newValue;
     });
   }
-  _backspace(String val){
-    setState(() {
-      numberValue = numberValue.substring(0,numberValue.length-1);
-    });
-  }
-  // _zero() {}
-  // _disp() {}
-  // _div() {}
 
+  bool isNumeric(String s) {
+    if(s == null) {
+      return false;
+    }
+    return double.parse(s, (e) => null) != null;
+  }
+
+  _doTheCalc(){
+    double result;
+    if(isNumeric(firstNumber) && isNumeric(secondNumber) && signValue != ''){
+      double val1 = double.parse(firstNumber);
+      double val2 = double.parse(secondNumber);
+      switch (signValue) {
+        case '+':
+          result = val1 + val2;
+          break;
+      }
+      _writeResult(result);
+      
+    }else{
+      print("i dati passati non sono numeri");
+    }
+  }
+
+  _writeResult(double result){
+    int resultInt = result.toInt();
+    if(resultInt == result){
+      _setNumberValue(resultInt.toString());
+    }else{
+      _setNumberValue(result.toString());
+    }
+  }
+  
+  _sign(String sign){
+    switch (sign) {
+      case '+':
+        if(signValue == ''){
+          firstNumber = numberValue;
+          numberValue = '';
+          signValue = sign;
+          _setNumberValue('0');
+        }
+        break;
+      case "=":
+        secondNumber = numberValue;
+        _doTheCalc();
+      break;
+    }    
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,8 +159,8 @@ class HomePageState extends State<MyHomePage> {
                     {'view':'/','function':_backspace,'argument':'/'},
                     {'view':'X','function':_add,'argument':'X'},
                     {'view':'-','function':_add,'argument':'-'},
-                    {'view':'+','function':_add,'argument':'+'},
-                    {'view':'=','function':_add,'argument':'='},
+                    {'view':'+','function':_sign,'argument':'+'},
+                    {'view':'=','function':_sign,'argument':'='},
                   ]),
                   // _createColumn(["/", "X", "-", "+", "="]),
                 ],

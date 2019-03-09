@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 // import 'package:myapp/makeGrid.dart';
 
 // class MyHomePage extends StatelessWidget {
@@ -43,11 +44,15 @@ class HomePageState extends State<MyHomePage> {
   }
 
   _clear(String newValue) {
+    _eraseNumberValues();
+    _setNumberValue('');
+  }
+
+ _eraseNumberValues(){
     firstNumber = '';
     secondNumber = '';
     signValue = '';
-    _setNumberValue('');
-  }
+ }
   _backspace(String val){
     _setNumberValue(numberValue.substring(0,numberValue.length-1));
   }
@@ -73,6 +78,15 @@ class HomePageState extends State<MyHomePage> {
         case '+':
           result = val1 + val2;
           break;
+        case '-':
+          result = val1 - val2;
+          break;
+        case 'x':
+          result = val1 * val2;
+          break;
+        case '÷':
+          result = val1 / val2;
+          break;
       }
       _writeResult(result);
       
@@ -88,23 +102,28 @@ class HomePageState extends State<MyHomePage> {
     }else{
       _setNumberValue(result.toString());
     }
+    _eraseNumberValues();
+    // print("firstnumber" + firstNumber);
+    // print("secondnumber" + secondNumber);
+  }
+
+  _radic(String sign){
+    var rad = sqrt(double.parse(numberValue));
+    _setNumberValue(rad.toStringAsFixed(4));
+    print(rad);
   }
   
   _sign(String sign){
-    switch (sign) {
-      case '+':
-        if(signValue == ''){
-          firstNumber = numberValue;
-          numberValue = '';
-          signValue = sign;
-          _setNumberValue('0');
-        }
-        break;
-      case "=":
-        secondNumber = numberValue;
-        _doTheCalc();
-      break;
-    }    
+    print('SIGN = ' + sign);
+    if(sign == '='){
+      secondNumber = numberValue;
+      _doTheCalc();
+    }else if(sign == '+' || sign == '-' || sign == 'x' || sign == '÷' ){
+      firstNumber = numberValue;
+      numberValue = '';
+      signValue = sign;
+      _setNumberValue('0');
+    }
   }
 
   @override
@@ -135,7 +154,7 @@ class HomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   _createColumn([
-                    {'view':'AC','function':_clear,'argument':'0'},
+                    {'view':'AC','function':_clear,'argument':'AC'},
                     {'view':'7','function':_add,'argument':'7'},
                     {'view':'4','function':_add,'argument':'4'},
                     {'view':'1','function':_add,'argument':'1'},
@@ -149,20 +168,19 @@ class HomePageState extends State<MyHomePage> {
                     {'view':'0','function':_add,'argument':'0'},
                   ]),
                   _createColumn([
-                    {'view':'%','function':_backspace,'argument':''},
+                    {'view':'√','function':_radic,'argument':'√'},
                     {'view':'9','function':_add,'argument':'9'},
                     {'view':'6','function':_add,'argument':'6'},
                     {'view':'3','function':_add,'argument':'3'},
                     {'view':'.','function':_add,'argument':'.'},
                   ]),
                   _createColumn([
-                    {'view':'/','function':_backspace,'argument':'/'},
-                    {'view':'X','function':_add,'argument':'X'},
-                    {'view':'-','function':_add,'argument':'-'},
+                    {'view':'÷','function':_sign,'argument':'÷'},
+                    {'view':'x','function':_sign,'argument':'x'},
+                    {'view':'-','function':_sign,'argument':'-'},
                     {'view':'+','function':_sign,'argument':'+'},
                     {'view':'=','function':_sign,'argument':'='},
                   ]),
-                  // _createColumn(["/", "X", "-", "+", "="]),
                 ],
               )
             ],
